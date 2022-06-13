@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import tags from '../data/tags.json';
+import Select from 'react-select';
 
 const TaskFilters = ({ tasks, setSortedTasks }) => {
   const options = [{
@@ -9,12 +10,10 @@ const TaskFilters = ({ tasks, setSortedTasks }) => {
     value: 'completed',
     label: 'Completed'
   },]
-  // eslint-disable-next-line
   const [filters, setFilters] = useState({
     status: null,
     tags: []
   });
-  // eslint-disable-next-line
   const [sortOrder, setSortOrder] = useState({ value: 'desc', label: 'Desc' });
   const [filteredTasks, setFilteredTasks] = useState(tasks);
   const sortTasksByStatus = (tasks) => {
@@ -90,39 +89,39 @@ const TaskFilters = ({ tasks, setSortedTasks }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filteredTasks, sortOrder])
 
-
-
   return (
     <div className='status-filter'>
       <h4>Filters: </h4>
       <div>
         <label htmlFor="filter"> By Status:</label>
-        <select>
-          {options.map(({ value, label }) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </select>
+        <Select
+          options={options}
+          isClearable={true}
+          onChange={(selectedOption) => setFilters(prev => ({ ...prev, status: selectedOption }))}
+          value={filters.status}>
+
+        </Select>
       </div>
       <div>
         <label htmlFor="filter"> By Tags:</label>
-        <select
-          name="tags"
-        >
-          {tags.map(tag => (
-            <option key={tag.name} value={tag.name}>{tag.name}</option>
-          ))}
-        </select>
+        <Select
+          options={tags.map(tag => ({ value: tag.name, label: tag.name, ...tag }))}
+          isMulti
+          onChange={(selectedOption) => {
+            setFilters(prev => ({ ...prev, tags: [...selectedOption] }))
+          }}
+          value={filters.tags}
+        />
       </div>
       <div>
         <label htmlFor="filter">Sort By:</label>
-        <select
-          name="sort"
-        >
-          <option value="asc">Asc</option>
-          <option value="desc">Desc</option>
-        </select>
+        <Select
+          options={[{ value: 'asc', label: 'Asc' }, { value: 'desc', label: 'Desc' }]}
+          onChange={(selectedOption) => {
+            setSortOrder(selectedOption)
+          }}
+          value={sortOrder}
+        />
       </div>
     </div>
   )

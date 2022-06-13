@@ -346,7 +346,7 @@ input:focus, textarea:focus {
   justify-content: flex-end;
   gap:0.5rem;
 }
-.modal button {
+.modal .button {
   display: inline-block;
   font-weight: 400;
   text-align: center;
@@ -361,7 +361,7 @@ input:focus, textarea:focus {
   border-radius: .25rem;
   transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
-.modal button.primary {
+.modal .button.primary {
   color: #fff;
   background-color: #007bff;
   border-color: #007bff;

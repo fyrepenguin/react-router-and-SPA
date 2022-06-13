@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import TaskForm from './TaskForm'
 import TaskItem from './TaskItem';
 import TaskHeader from './TaskHeader';
 
-const TodoList = ({ tasks, onCreate, onUpdate, onDelete, defaultTask }) => {
+const TodoList = ({ tasks, onCreate, onUpdate, onDelete }) => {
+  const defaultTask = { title: "", description: "", deadline: null, tags: [], priority: false, image: "", completed: false, id: null, createdAt: null };
   const [modal, setModal] = useState(false);
   const [sortedTasks, setSortedTasks] = useState(tasks);
   const [categorisedTasks, setCategorisedTasks] = useState({
@@ -16,11 +18,19 @@ const TodoList = ({ tasks, onCreate, onUpdate, onDelete, defaultTask }) => {
     tags: []
   });
 
+  const [title, setTitle] = useState('');
   const toggle = () => {
     setModal(!modal);
   }
 
-
+  const addTask = (e) => {
+    e.preventDefault();
+    onCreate({ ...defaultTask, title, id: uuidv4(), createdAt: new Date().getTime() });
+    setTitle('');
+  }
+  const handleInput = (e) => {
+    setTitle(e.target.value)
+  }
 
   // push tasks that are completed to the bottom of the list
 
@@ -59,13 +69,14 @@ const TodoList = ({ tasks, onCreate, onUpdate, onDelete, defaultTask }) => {
       priority,
       tags: prev.tags
     }));
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortedTasks])
 
   return (
     <>
       <div className="todo-list-header">
-        <form className='task-input-container'>  <input placeholder="Add task todo..." type="text" name="title" />
+        <form onSubmit={addTask} className='task-input-container'>  <input placeholder="Add task todo..." type="text" name="title" onChange={handleInput} value={title} />
           <button type="submit">Create Task</button>
         </form>
         <div className='task-input-container'>
